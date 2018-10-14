@@ -1,27 +1,10 @@
 import pandas as pd
 from gamedatadump import *
 from gameenums import *
+from character import *
+from behavior import *
+
 from datetime import timedelta
-
-
-class PlayData:
-    def __init__(self):
-        self.quarter = 1
-        self.offense_team = Team.NONE
-        self.defense_team = Team.NONE
-        self.time_left = timedelta(minutes=0, seconds=0)
-        self.play_type = PlayType.NONE
-        self.play_description = ''
-
-    def is_active_play(self):
-        return (self.play_type != PlayType.TIMEOUT and
-                self.play_type != PlayType.QUARTER and
-                self.play_type != PlayType.TWOMINUTE)
-
-    def __str__(self):
-        return (str(self.quarter) + ' ' + str(self.time_left) + ' ' + str(self.play_type) + ' ' +
-                str(self.offense_team) + ' ' + str(self.defense_team) + '\t' +
-                self.play_description)
 
 
 class GameData:
@@ -53,6 +36,7 @@ class GameData:
                 play.offense_team = Team(game_play_row['OffenseTeam'])
                 play.defense_team = Team(game_play_row['DefenseTeam'])
 
+            play.calculate_statistical_behavior()
             self.play_data.append(play)
 
     def print_game_data(self):
@@ -60,8 +44,17 @@ class GameData:
 
 
 def main():
+    discrete_model = EmotionModel(4)  # Once we have different emotion models substitute a model here
+    character = Character(discrete_model)
     game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
-    game_data.print_game_data()
+
+    for play in game_data.play_data:
+        emotion_for_play = character.get_emotion_for(play)
+
+        # Todo: Use the emotion value
+        print(emotion_for_play)
+
+    #game_data.print_game_data()
 
 
 if __name__ == "__main__":
