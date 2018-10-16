@@ -45,16 +45,16 @@ class GameData:
 
 def main():
     discrete_model = EmotionModel(4)  # Once we have different emotion models substitute a model here
-    character = Character(discrete_model)
+    character = Character('kishore', discrete_model)
     game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
 
     for play in game_data.play_data:
         emotion_for_play = character.get_emotion_for(play)
 
         # Todo: Use the emotion value
-        print(emotion_for_play)
+        #print(emotion_for_play)
 
-    #game_data.print_game_data()
+    game_data.print_game_data()
 
 
 if __name__ == "__main__":
