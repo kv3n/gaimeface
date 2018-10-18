@@ -14,6 +14,11 @@ class Character:
 
     def determine_utilities_for(self, play):
         predicted_behavior = Behavior()
+
+        predicted_behavior.expected_outcome = random.randint(0,1) # to test basic emotion model
+        predicted_behavior.utility = random.uniform(0,1) # to test basic emotion model
+        predicted_behavior.probability = random.uniform(0,1) # to test basic emotion model
+
         return predicted_behavior
 
     def set_emotion_mode(self, new_emotion_model):
@@ -24,6 +29,7 @@ class Character:
 
         # Compare here with statistical behavior
         return self.emotion_model.process(predicted_behavior=predicted_behavior,
-                                          statistical_behavior=play.statistical_behavior)
+                                          statistical_behavior=play.statistical_behavior,
+                                          actual_behavior=play.actual_behavior)
 
 

@@ -36,6 +36,10 @@ class Team(Enum):
     MIN = 'MIN'
     NONE = 'NONE'
 
+class Emotions(Enum):
+    NEUTRAL = 0
+    HAPPY = 1
+    SAD = 2
 
 class PlayType(Enum):
     RUSH = 'RUSH'

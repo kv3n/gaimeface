@@ -32,6 +32,8 @@ class GameData:
             play.play_type = PlayType(game_play_row['PlayType'])
             play.play_description = game_play_row['Description']
 
+            play.actual_behavior = random.randint(0,1) # to test basic emotion model
+
             if play.is_active_play():
                 play.offense_team = Team(game_play_row['OffenseTeam'])
                 play.defense_team = Team(game_play_row['DefenseTeam'])
@@ -44,7 +46,7 @@ class GameData:
 
 
 def main():
-    discrete_model = EmotionModel(4)  # Once we have different emotion models substitute a model here
+    discrete_model = DummyModel(4)  # Once we have different emotion models substitute a model here
     character = Character('kishore', discrete_model)
     game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
 
@@ -52,9 +54,9 @@ def main():
         emotion_for_play = character.get_emotion_for(play)
 
         # Todo: Use the emotion value
-        #print(emotion_for_play)
+        print(str(play.play_type) + ' ' + Emotions(emotion_for_play).name)
 
-    game_data.print_game_data()
+    # game_data.print_game_data()
 
 
 if __name__ == "__main__":

@@ -14,4 +14,4 @@ def build_character_sketch(sketch_file):
 # TODO: Add code to generate the sketch here
 
 # Build character this way
-#build_character_sketch('kishore')
+build_character_sketch('kishore')
