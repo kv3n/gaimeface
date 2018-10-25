@@ -105,7 +105,7 @@ venv.bak/
 .mypy_cache/
 
 # Visual Studio 2015 user specific files
-*/.vs/
+unreal/*/.vs/
 
 # Compiled Object files
 *.slo
@@ -157,6 +157,9 @@ unreal/**/Plugins/*/Binaries/*
 
 # Builds
 unreal/**/Build/*
+
+# Import
+unreal/**/Import/*
 
 # Whitelist PakBlacklist-<BuildConfiguration>.txt files
 !unreal/**/Build/*/

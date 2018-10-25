@@ -1,1 +1,0 @@
-Valeur_Displacement_Max : 0.286377
