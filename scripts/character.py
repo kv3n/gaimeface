@@ -15,9 +15,21 @@ class Character:
     def determine_utilities_for(self, play):
         predicted_behavior = Behavior()
 
-        predicted_behavior.expected_outcome = random.randint(0,1) # to test basic emotion model
-        predicted_behavior.utility = random.uniform(0,1) # to test basic emotion model
-        predicted_behavior.probability = random.uniform(0,1) # to test basic emotion model
+        predicted_behavior.expected_outcome = random.randint(0,1) # if our team we want this to be one
+        predicted_behavior.utility = random.uniform(0,1) # based on fair-scmidt we have utilities
+
+        # eo = (((1 - present_or_past) * probability of winning) + (present_or_past * probability of winning at beginning of game)) 
+        # + positive_development - (negative_development-coping_for_team)
+
+        # For example:
+        # eo = ((((1 - 0.5) * 0) + (0.5 * 0.7)) + 0.0 - (0 - 0)) # for my own team
+        # if (eo > 1):
+        #     eo = 1
+        # elif (eo < 0):
+        #     eo = 0
+
+        # Need eo for the play of the other team if we have time
+        predicted_behavior.probability = random.uniform(0,1) # will be equal to the eo
 
         return predicted_behavior
 
