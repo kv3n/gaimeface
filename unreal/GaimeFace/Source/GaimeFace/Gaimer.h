@@ -16,6 +16,28 @@ struct FGameDetails
 
 	UPROPERTY()
 	int32 num_plays;
+
+	FGameDetails() 
+		: num_plays(0)
+	{
+
+	}
+};
+
+
+USTRUCT()
+struct FPlayReaction
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	int32 emotion_label;
+
+	FPlayReaction()
+		: emotion_label(-1)
+	{
+
+	}
 };
 
 
@@ -25,14 +47,20 @@ class GAIMEFACE_API AGaimer : public ACharacter
 	GENERATED_BODY()
 
 private:
-	FGameDetails mGameBeingWatched;
+	FHttpModule* mHttp;
+	FString mApiBaseUrl;
 
-	FHttpModule* mHtto;
-	FString mApiBaseUrl = "http://127.0.0.1:5000/";
-
-	void SendInitRequest();
 
 	TSharedRef<IHttpRequest> CreateRequest(FString SubApi);
+
+	void ResetGame();
+
+	void EndGame();
+
+	FGameDetails mGameBeingWatched;
+	bool mGameBegun;
+	bool mEndGame;
+	int32 mRemainingPlays;
 
 public:
 	// Sets default values for this character's properties
@@ -42,6 +70,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
+	UFUNCTION(BlueprintCallable, Meta=(Category="Script Calls"))
+	void RequestStartGame(FString name);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -49,9 +81,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION()
+	void ConsumePlay();
 
-	void OnInitComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-	void OnResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnGameStarted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnPlayConsumed(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	template <typename StructType>
 	void GetJsonStringFromStruct(StructType FilledStruct, FString& StringOutput);

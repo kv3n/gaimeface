@@ -51,11 +51,14 @@ character = None
 game_data = None
 
 
-@app.route("/update_play")
-def update_play():
-    play_id = request.args.get('playid')
+@app.route("/consume_play")
+def consume_play():
+    play_id = int(request.args.get('playid'))
 
-    return {'success': True}
+    emotion_label = character.get_emotion_for(game_data.play_data[play_id])
+
+    play_reaction = {'emotion_label': emotion_label}
+    return str(play_reaction)
 
 
 @app.route("/init_game")
