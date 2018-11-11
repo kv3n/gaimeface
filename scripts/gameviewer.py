@@ -3,6 +3,8 @@ from gamedatadump import *
 from gameenums import *
 from character import *
 from behavior import *
+from flask import Flask, request
+app = Flask(__name__)
 
 from datetime import timedelta
 
@@ -45,18 +47,33 @@ class GameData:
         [print(play) for play in self.play_data]
 
 
-def main():
+character = None
+game_data = None
+
+
+@app.route("/update_play")
+def update_play():
+    play_id = request.args.get('playid')
+
+    return {'success': True}
+
+
+@app.route("/init_game")
+def init_game():
+    global character
+    global game_data
+    character_name = request.args.get('name')
     discrete_model = DummyModel(4)  # Once we have different emotion models substitute a model here
-    character = Character('kishore', discrete_model)
+    character = Character(character_name, discrete_model)
     game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
 
-    for play in game_data.play_data:
-        emotion_for_play = character.get_emotion_for(play)
+    result = {"num_plays": len(game_data.play_data)}
 
-        # Todo: Use the emotion value
-        print(str(play.play_type) + ' ' + Emotions(emotion_for_play).name)
+    return str(result)
 
-    # game_data.print_game_data()
+
+def main():
+    app.run(debug=True, port=5000)  # run app in debug mode on port 5000
 
 
 if __name__ == "__main__":
