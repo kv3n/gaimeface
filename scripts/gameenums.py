@@ -40,6 +40,8 @@ class Emotions(Enum):
     NEUTRAL = 0
     HAPPY = 1
     SAD = 2
+    FEAR = 3
+    ANGER = 4
 
 class PlayType(Enum):
     RUSH = 'RUSH'

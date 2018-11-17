@@ -46,7 +46,7 @@ class GameData:
 
 
 def main():
-    discrete_model = DummyModel(4)  # Once we have different emotion models substitute a model here
+    discrete_model = SchererModel(4)  # Once we have different emotion models substitute a model here
     character = Character('kishore', discrete_model)
     game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
 
