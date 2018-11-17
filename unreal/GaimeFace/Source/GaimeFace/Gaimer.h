@@ -25,7 +25,7 @@ struct FGameDetails
 };
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FPlayReaction
 {
 	GENERATED_USTRUCT_BODY()
@@ -34,7 +34,7 @@ struct FPlayReaction
 	int32 emotion_label;
 
 	FPlayReaction()
-		: emotion_label(-1)
+		: emotion_label(0)
 	{
 
 	}
@@ -61,6 +61,8 @@ private:
 	bool mGameBegun;
 	bool mEndGame;
 	int32 mRemainingPlays;
+
+	FPlayReaction mCurrentReaction;
 
 public:
 	// Sets default values for this character's properties
@@ -92,4 +94,7 @@ public:
 
 	template <typename StructType>
 	void GetStructFromJsonString(FHttpResponsePtr Response, StructType& StructOutput);
+
+	UFUNCTION(BlueprintCallable)
+	FPlayReaction GetCurrentReaction() { return mCurrentReaction; }
 };

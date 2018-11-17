@@ -82,8 +82,9 @@ def init_game():
 
 
 def main():
-    #app.run(debug=True, port=5000)  # run app in debug mode on port 5000
-    game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
+    app.run(debug=True, port=5000)  # run app in debug mode on port 5000
+    #game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
+
 
 if __name__ == "__main__":
     main()

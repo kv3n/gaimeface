@@ -154,6 +154,8 @@ void AGaimer::OnPlayConsumed(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	{
 		EndGame();
 	}
+
+	mCurrentReaction = playReaction;
 }
 
 template <typename StructType>
