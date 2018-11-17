@@ -18,6 +18,12 @@ class GameData:
         game_data_frame.loc[game_data_frame['Description'].str.contains('TWO-MINUTE'), 'PlayType'] = 'TWOMINUTE'
         game_data_frame['OffenseTeam'].fillna('NONE', inplace=True)
 
+        is_nogood = game_data_frame['Description'].str.contains('NO GOOD')
+        is_fieldgoal = game_data_frame['PlayType'].str.contains('FIELD GOAL')
+        is_extrapoint = game_data_frame['PlayType'].str.contains('EXTRA POINT')
+
+        game_data_frame.loc[is_nogood & (is_fieldgoal | is_extrapoint), 'IsIncomplete'] = 1
+
         self.game_data = game_data_frame.loc[game_data_frame['GameId'] == gameid]
         self.home_team = home_team
         self.away_team = away_team
@@ -76,8 +82,8 @@ def init_game():
 
 
 def main():
-    app.run(debug=True, port=5000)  # run app in debug mode on port 5000
-
+    #app.run(debug=True, port=5000)  # run app in debug mode on port 5000
+    game_data = GameData(2018100710, Team.SF, Team.ARI)  # Arizona vs 49ers
 
 if __name__ == "__main__":
     main()
