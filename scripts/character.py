@@ -9,7 +9,7 @@ class Character:
         self.emotion_model = emotion_model
 
         self.sketch = {}
-        with open(data_loc + sketch_file + '.json') as sketch_data:
+        with open(sketch_file + '.json') as sketch_data:
             self.sketch = json.load(sketch_data)
 
     def determine_utilities_for(self, play):

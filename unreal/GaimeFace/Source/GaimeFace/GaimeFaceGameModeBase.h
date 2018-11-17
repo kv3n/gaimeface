@@ -16,5 +16,8 @@ class GAIMEFACE_API AGaimeFaceGameModeBase : public AGameModeBase
 	
 	
 	
-	
+private:
+	AGaimeFaceGameModeBase();
+
+public:
 };
