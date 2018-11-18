@@ -30,7 +30,7 @@ struct FPlayReaction
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	int32 emotion_label;
 
 	FPlayReaction()
