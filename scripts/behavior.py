@@ -99,33 +99,53 @@ class SchererModel(EmotionModel):
         fear = 0
         anger = 0
         sadness = 0
-        if (predicted_behavior.expected_outcome == actual_behavior):
-            joy = predicted_behavior.utility * (1 - predicted_behavior.probability)
-            if (predicted_behavior.expected_outcome == statistical_behavior.expected_outcome):
-                if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
-                    joy = joy - ((1 - abs(predicted_behavior.probability - statistical_behavior.probability)) * (1 - predicted_behavior.utility) * joy)
-            else:
-                if (statistical_behavior.probability > predicted_behavior.probability):
+        if (actual_behavior == 1):
+            if (predicted_behavior.expected_outcome == actual_behavior):
+                joy = predicted_behavior.utility * (1 - predicted_behavior.probability)
+                if (predicted_behavior.expected_outcome == statistical_behavior.expected_outcome):
                     if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
-                        joy = joy + (predicted_behavior.utility * joy)
+                        joy = joy - ((1 - abs(predicted_behavior.probability - statistical_behavior.probability)) * (1 - predicted_behavior.utility) * joy)
+                else:
+                    if (statistical_behavior.probability > predicted_behavior.probability):
+                        if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
+                            joy = joy + (predicted_behavior.utility * joy)
+                        else:
+                            joy = joy + (statistical_behavior.probability * predicted_behavior.utility * joy)
                     else:
-                        joy = joy + (statistical_behavior.probability * predicted_behavior.utility * joy)
+                        if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
+                            joy = joy + ((1 - abs(predicted_behavior.probability - statistical_behavior.probability)) * (predicted_behavior.utility) * joy)
+            else:
+                joy = predicted_behavior.utility * predicted_behavior.probability
+                if (predicted_behavior.expected_outcome == statistical_behavior.expected_outcome):
+                    if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
+                        joy = joy + (max(predicted_behavior.probability, statistical_behavior.probability)) * (predicted_behavior.utility) * joy)
+                else:
+                    if (statistical_behavior.probability > predicted_behavior.probability):
+                        if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
+                            joy = joy + (predicted_behavior.utility * joy)
+                        else:
+                            joy = joy + (statistical_behavior.probability * predicted_behavior.utility * joy)
+                    else:
+                        if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
+                            joy = joy + ((1 - abs(predicted_behavior.probability - statistical_behavior.probability)) * (predicted_behavior.utility) * joy)
+        else:
+            if (predicted_behavior.expected_outcome != actual_behavior):
+                fear = predicted_behavior.utility * (1 - predicted_behavior.probability)
+                anger = predicted_behavior.utility * predicted_behavior.probability
+                sadness = predicted_behavior.utility * predicted_behavior.probability
+                if (predicted_behavior.expected_outcome != statistical_behavior.expected_outcome):
+                    if (predicted_behavior.probability < 0.5 and statistical_behavior.probability > 0.5):
+                        fear = fear - (abs(statistical_behavior.probability - predicted_behavior.probability) * (1 - predicted_behavior.utility) * fear)
+                        anger = anger - (abs(statistical_behavior.probability - predicted_behavior.probability) * (1 - predicted_behavior.utility) * anger)
+                        sadness = sadness - (abs(statistical_behavior.probability - predicted_behavior.probability) * (1 - predicted_behavior.utility) * sadness)
                 else:
                     if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
-                        joy = joy + ((1 - abs(predicted_behavior.probability - statistical_behavior.probability)) * (predicted_behavior.utility) * joy)
-        else:
-            fear = predicted_behavior.utility * (1 - predicted_behavior.probability)
-            anger = predicted_behavior.utility * predicted_behavior.probability
-            sadness = predicted_behavior.utility * predicted_behavior.probability
-            if (predicted_behavior.expected_outcome != statistical_behavior.expected_outcome):
-                if (predicted_behavior.probability < 0.5 and statistical_behavior.probability > 0.5):
-                    fear = fear - (abs(statistical_behavior.probability - predicted_behavior.probability) * (1 - predicted_behavior.utility) * fear)
-                    anger = anger - (abs(statistical_behavior.probability - predicted_behavior.probability) * (1 - predicted_behavior.utility) * anger)
-                    sadness = sadness - (abs(statistical_behavior.probability - predicted_behavior.probability) * (1 - predicted_behavior.utility) * sadness)
+                        fear = fear + (max(statistical_behavior.probability, predicted_behavior.probability) * (predicted_behavior.utility) * fear)
+                        anger = anger + (max(statistical_behavior.probability, predicted_behavior.probability) * (predicted_behavior.utility) * anger)
             else:
-                if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
-                    fear = fear + (max(statistical_behavior.probability, predicted_behavior.probability) * (predicted_behavior.utility) * fear)
-                    anger = anger + (max(statistical_behavior.probability, predicted_behavior.probability) * (predicted_behavior.utility) * anger)
+                fear = predicted_behavior.utility * (1 - predicted_behavior.probability)
+                sadness = predicted_behavior.utility * predicted_behavior.probability
+
 
         if (joy > fear and joy > anger and joy > sadness):
             return self.HAPPY
