@@ -12,7 +12,7 @@ class PlayData:
         self.statistical_behavior = None
         self.down = int(csv_row['down'])
         self.to_go = int(csv_row['ydstogo'])
-        self.yards = int(csv_row['ydsnet'])
+        self.yards = int(csv_row['Yards.Gained'])
         self.is_complete = (csv_row['PassOutcome'] == 'Complete') or (csv_row['PuntResult'] == 'Clean') or (csv_row['ExPointResult'] == 'Made') or (csv_row['FieldGoalResult'] == 'Good') or (self.yards > 0)
         self.play_key = str(self.down) + '_'
         to_go_key = self.to_go
@@ -24,9 +24,15 @@ class PlayData:
 
         self.win_probability = csv_row['Win_Prob']  # This only works because we consider offense
 
+        # Extra Emotion Variables
+        self.is_touchdown = int(csv_row['Touchdown'])
+        self.is_intercepted = int(csv_row['InterceptionThrown'])
+        self.is_exciting_fieldgoal = (self.play_type == PlayType.FIELDGOAL) and (self.is_complete) and (csv_row['FieldGoalDistance'] > 40)
+
         if self.is_active_play():
             self.offense_team = Team(csv_row['posteam'])
             self.defense_team = Team(csv_row['DefensiveTeam'])
+
         else:
             self.offense_team = Team.NONE
             self.defense_team = Team.NONE
@@ -54,11 +60,14 @@ class PlayData:
             if (key_down >= self.down and key_togo > self.to_go) or (key_togo == 10 and key_down >= self.down):
                 plays += value
 
-        self.statistical_behavior.expected_outcome = random.randint(0,1) # to test basic emotion model
-        self.statistical_behavior.utility = random.uniform(0,1) # to test basic emotion model
+        self.statistical_behavior.utility = random.uniform(0, 1)  # to test basic emotion model
 
         if plays > 0:
             self.statistical_behavior.probability = successes / plays
+        else:
+            self.statistical_behavior.probability = random.uniform(0, 1)
+
+        self.statistical_behavior.compute_expected_outcome()
 
     def __str__(self):
         return (str(self.quarter) + ' ' + str(self.time_left) + ' ' + str(self.play_type) + ' ' +

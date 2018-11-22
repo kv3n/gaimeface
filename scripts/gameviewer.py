@@ -33,7 +33,7 @@ class GameData:
 
             if cur_play.yards >= cur_play.to_go:
                 success[cur_play.play_key] += 1
-            elif (cur_play.play_type == PlayType.FIELDGOAL) and (not cur_play.is_incomplete):
+            elif (cur_play.play_type == PlayType.FIELDGOAL) and cur_play.is_complete:
                 success[cur_play.play_key] += 1
 
     def __init__(self, gameid, home_team, away_team, character_team):
@@ -43,6 +43,7 @@ class GameData:
         game_data_frame['down'].fillna(0, inplace=True)
         game_data_frame['PosTeamScore'].fillna(0, inplace=True)
         game_data_frame['DefTeamScore'].fillna(0, inplace=True)
+        game_data_frame['FieldGoalDistance'].fillna(0, inplace=True)
 
         self.game_data = game_data_frame.loc[(game_data_frame['GameID'] == gameid)]
         self.home_team = home_team
@@ -61,12 +62,12 @@ class GameData:
             if play.offense_team != character_team:
                 continue
 
-            play.actual_behavior = random.randint(0,1) # to test basic emotion model
-
             play.calculate_statistical_behavior(successful_play_prob, total_plays)
             self.__update_game_dictionary__(successful_play_prob, total_plays, play)
 
             self.play_data.append(play)
+
+        self.game_odds = self.play_data[0].win_probability
 
     def print_game_data(self):
         [print(play) for play in self.play_data]
@@ -82,9 +83,9 @@ def consume_play():
 
     play: PlayData = game_data.play_data[play_id]
     emotion_label = character.get_emotion_for(play)
-    print('Requested Emotion: ' + str(emotion_label.emotion) + ' with intensity: ' str(emotion_label.intensity))
+    print('Requested Emotion: ' + str(emotion_label['emotion']) + ' with intensity: ' + str(emotion_label['intensity']))
 
-    play_reaction = {'emotion_label': emotion_label.emotion, 'intensity':emotion_label.intensity, 'play_desc': play.play_description}
+    play_reaction = {'emotion_label': emotion_label['emotion'], 'intensity': emotion_label['intensity'], 'play_desc': play.play_description}
     return str(play_reaction)
 
 
@@ -95,7 +96,8 @@ def init_game():
     character_name = request.args.get('name')
     discrete_model = SchererModel(4)  # Once we have different emotion models substitute a model here
     character = Character(character_name, discrete_model)
-    game_data = GameData(2017122409, Team.SF, Team.JAX, Team.SF)  # Arizona vs 49ers
+    game_data = GameData(2017122409, Team.SF, Team.JAX, Team.SF)  # Jacksonville @ 49ers
+    character.watch_game(game_data)
 
     result = {"num_plays": len(game_data.play_data)}
 
@@ -103,16 +105,16 @@ def init_game():
 
 
 def main():
-    app.run(debug=True, port=5000)  # run app in debug mode on port 5000
-    """
+    #app.run(debug=True, port=5000)  # run app in debug mode on port 5000
+
     game_data = GameData(2017122409, Team.SF, Team.JAX, Team.SF)  # Jaguars @ 49ers
     discrete_model = SchererModel(4)  # Once we have different emotion models substitute a model here
     character = Character('kishore', discrete_model)
+    character.watch_game(game_data)
     for play in game_data.play_data:
         print(play.play_description)
         emotion_label = character.get_emotion_for(play)
         print(emotion_label)
-    """
 
 
 if __name__ == "__main__":

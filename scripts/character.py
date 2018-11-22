@@ -2,12 +2,14 @@ from behavior import *
 from playchart import *
 from gamedatadump import *
 import json
+import gameviewer
 
 
 class Character:
     def __init__(self, sketch_file, emotion_model):
         self.emotion_model = emotion_model
         self.debug_info = ''
+        self.game = None
 
         self.sketch = {}
         with open(sketch_file + '.json') as sketch_data:
@@ -43,27 +45,38 @@ class Character:
 
         return utility
 
-    def determine_utilities_for(self, play: PlayData):
-        predicted_behavior = Behavior()
+    def __get_perceived_probability_for__(self, play: PlayData):
+        past = self.sketch['past']
+        present = 1.0 - past
+        positive_dev = self.sketch['positive']
+        negative_dev = self.sketch['negative']
+        coping = self.sketch['coping']
 
-        predicted_behavior.expected_outcome = random.randint(0, 1)  # if our team we want this to be one
+        historical_probability = present * play.win_probability + past * self.game.game_odds
+        positive_negative_dev_effect = positive_dev * 0.2 - negative_dev - coping
 
-        predicted_behavior.utility = self.__get_utility_for(play)  # based on fair-scmidt we have utilities
-
-        # eo = (((1 - present_or_past) * probability of winning) + (present_or_past * probability of winning at beginning of game)) 
-        # + positive_development - (negative_development-coping_for_team)
+        probability = historical_probability + positive_negative_dev_effect
 
         # For example:
         # eo = ((((1 - 0.5) * 0) + (0.5 * 0.7)) + 0.0 - (0 - 0)) # for my own team
-        # if (eo > 1):
-        #     eo = 1
-        # elif (eo < 0):
-        #     eo = 0
+        probability = min(1.0, max(0.0, probability))
+        self.debug_info += '\nSeen win prob: ' + str(play.win_probability) + ', Odds: ' + str(self.game.game_odds)
+
+        return probability
+
+    def determine_utilities_for(self, play: PlayData):
+        predicted_behavior = Behavior()
+
+        predicted_behavior.utility = self.__get_utility_for(play)  # based on fair-scmidt we have utilities
 
         # Need eo for the play of the other team if we have time
-        predicted_behavior.probability = random.uniform(0,1) # will be equal to the eo
+        predicted_behavior.probability = self.__get_perceived_probability_for__(play)  # will be equal to the eo
+        predicted_behavior.compute_expected_outcome(threshold=0.4)
 
         return predicted_behavior
+
+    def watch_game(self, game):
+        self.game = game
 
     def set_emotion_mode(self, new_emotion_model):
         self.emotion_model = new_emotion_model
@@ -72,14 +85,16 @@ class Character:
         self.debug_info = play.play_description + '\n' + 'Predicted: '
 
         predicted_behavior = self.determine_utilities_for(play)
+
         self.debug_info += '\nStatistical Probability: ' + str(play.statistical_behavior.probability)
-        self.debug_info += '\bActual Behavior: ' + str(play.is_complete)
+        self.debug_info += '\nPerceived Probability: ' + str(predicted_behavior.probability)
+        self.debug_info += '\nActual Behavior: ' + str(play.is_complete)
 
         print(self.debug_info)
 
         # Compare here with statistical behavior
         return self.emotion_model.process(predicted_behavior=predicted_behavior,
                                           statistical_behavior=play.statistical_behavior,
-                                          actual_behavior=int(play.is_complete))
+                                          actual_play=play)
 
 

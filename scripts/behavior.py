@@ -8,8 +8,15 @@ class Behavior:
         self.probability = 0.0 # The probability of that play being successful
 
     def __str__(self):
-        return ('Expected: ' + str(self.expected_outcome) + ' ' + 'Utility: ' + str(self.utility) + ' ' 
-        + 'Probability: ' + str(self.probability))
+        return ('Expected: ' + str(self.expected_outcome) + ' ' + 'Utility: ' + str(self.utility) + ' ' + 'Probability: ' + str(self.probability))
+
+    def compute_expected_outcome(self, threshold=0.5):
+        if self.probability > threshold:
+            self.expected_outcome = 1
+        else:
+            self.expected_outcome = 0
+            self.probability = 1.0 - self.probability
+
 
 class EmotionModel:
     def __init__(self, seed = -1):
@@ -19,6 +26,7 @@ class EmotionModel:
     def process(self, predicted_behavior, statistical_behavior, actual_behavior):
         # Do Emotion Calculation here
         return random.randint(0, 5)
+
 
 class DummyModel(EmotionModel):
     def __init__(self, seed = -1):
@@ -94,7 +102,8 @@ class SchererModel(EmotionModel):
         self.FEAR = 3
         self.ANGER = 4
 
-    def process(self, predicted_behavior, statistical_behavior, actual_behavior):
+    def process(self, predicted_behavior, statistical_behavior, actual_play):
+        actual_behavior = int(actual_play.is_complete)
         joy = 0
         fear = 0
         anger = 0
@@ -148,17 +157,17 @@ class SchererModel(EmotionModel):
 
 
         if (joy > fear and joy > anger and joy > sadness):
-            return {'emotion':self.HAPPY, 'intensity':joy}
+            return {'emotion': self.HAPPY, 'intensity': joy}
         elif (fear > joy and fear > anger and fear > sadness):
-            return {'emotion':self.FEAR, 'intensity':fear}
+            return {'emotion': self.FEAR, 'intensity': fear}
         elif (anger > fear and anger > joy and anger > sadness):
-            return {'emotion':self.ANGER, 'intensity':anger}
+            return {'emotion': self.ANGER, 'intensity': anger}
         elif (sadness > fear and sadness > anger and sadness > joy):
-            return {'emotion':self.SAD, 'intensity':sadness}
+            return {'emotion': self.SAD, 'intensity': sadness}
         elif (sadness == anger and sadness > fear and sadness > joy and sadness < 0.7):
-            return {'emotion':self.SAD, 'intensity':sadness}
+            return {'emotion': self.SAD, 'intensity': sadness}
         elif (sadness == anger and sadness > fear and sadness > joy and sadness >= 0.7):
-            return {'emotion':self.ANGER, 'intensity':anger}
+            return {'emotion': self.ANGER, 'intensity': anger}
         else:
-            return self.NEUTRAL        
+            return {'emotion': self.NEUTRAL, 'intensity': 1.0}
 

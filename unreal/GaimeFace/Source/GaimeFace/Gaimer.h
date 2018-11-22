@@ -34,6 +34,9 @@ struct FPlayReaction
 	int32 emotion_label;
 
 	UPROPERTY(BlueprintReadOnly)
+	float intensity;
+
+	UPROPERTY(BlueprintReadOnly)
 	FString play_desc;
 
 	FPlayReaction()
