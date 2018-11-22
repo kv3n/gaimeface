@@ -118,7 +118,7 @@ class SchererModel(EmotionModel):
                 joy = predicted_behavior.utility * predicted_behavior.probability
                 if (predicted_behavior.expected_outcome == statistical_behavior.expected_outcome):
                     if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
-                        joy = joy + (max(predicted_behavior.probability, statistical_behavior.probability)) * (predicted_behavior.utility) * joy)
+                        joy = joy + (max(predicted_behavior.probability, statistical_behavior.probability)) * (predicted_behavior.utility) * joy
                 else:
                     if (statistical_behavior.probability > predicted_behavior.probability):
                         if (predicted_behavior.probability > 0.5 or statistical_behavior.probability > 0.5):
