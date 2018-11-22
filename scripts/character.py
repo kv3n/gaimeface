@@ -7,6 +7,7 @@ import json
 class Character:
     def __init__(self, sketch_file, emotion_model):
         self.emotion_model = emotion_model
+        self.debug_info = ''
 
         self.sketch = {}
         with open(sketch_file + '.json') as sketch_data:
@@ -38,7 +39,7 @@ class Character:
                        self.beta * (max(team_score - opponent_score, 0))
                        ) / max(team_score, opponent_score)
 
-        print(str(team_score) + ' - ' + str(opponent_score) + ' -> ' + str(utility))
+        self.debug_info += (str(team_score) + ' - ' + str(opponent_score) + ' -> ' + str(utility))
 
         return utility
 
@@ -67,12 +68,18 @@ class Character:
     def set_emotion_mode(self, new_emotion_model):
         self.emotion_model = new_emotion_model
 
-    def get_emotion_for(self, play):
+    def get_emotion_for(self, play: PlayData):
+        self.debug_info = play.play_description + '\n' + 'Predicted: '
+
         predicted_behavior = self.determine_utilities_for(play)
+        self.debug_info += '\nStatistical Probability: ' + str(play.statistical_behavior.probability)
+        self.debug_info += '\bActual Behavior: ' + str(play.is_complete)
+
+        print(self.debug_info)
 
         # Compare here with statistical behavior
         return self.emotion_model.process(predicted_behavior=predicted_behavior,
                                           statistical_behavior=play.statistical_behavior,
-                                          actual_behavior=play.actual_behavior)
+                                          actual_behavior=int(play.is_complete))
 
 

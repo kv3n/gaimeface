@@ -147,7 +147,12 @@ void AGaimer::OnPlayConsumed(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	FPlayReaction playReaction;
 	GetStructFromJsonString<FPlayReaction>(Response, playReaction);
 
-	UE_LOG(LogTemp, Warning, TEXT("Need emotion: %d for play %d"), playReaction.emotion_label, (mGameBeingWatched.num_plays - mRemainingPlays));
+	UE_LOG(LogTemp, Warning, TEXT("Need emotion: %d for play %d: %s"), playReaction.emotion_label, (mGameBeingWatched.num_plays - mRemainingPlays), *(playReaction.play_desc));
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, playReaction.play_desc);
+	}
 
 	mRemainingPlays--;
 	if (mRemainingPlays == 0)

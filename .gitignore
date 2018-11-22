@@ -10,6 +10,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Data hide
+data/
+
 # Distribution / packaging
 .Python
 build/
@@ -109,6 +112,7 @@ venv.bak/
 
 # Visual Studio 2015 user specific files
 unreal/*/.vs/
+unreal/*/enc_temp_folder/
 
 # Compiled Object files
 *.slo

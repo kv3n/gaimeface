@@ -10,11 +10,10 @@ class PlayData:
         self.play_type = PlayType(csv_row['PlayType'])
         self.play_description = csv_row['desc']
         self.statistical_behavior = None
-        self.actual_behavior = 0
         self.down = int(csv_row['down'])
         self.to_go = int(csv_row['ydstogo'])
         self.yards = int(csv_row['ydsnet'])
-        self.is_complete = (csv_row['PassOutcome'] == 'Complete') or (csv_row['PuntResult'] == 'Clean') or (csv_row['ExPointResult'] == 'Made') or (csv_row['FieldGoalResult'] == 'Good')
+        self.is_complete = (csv_row['PassOutcome'] == 'Complete') or (csv_row['PuntResult'] == 'Clean') or (csv_row['ExPointResult'] == 'Made') or (csv_row['FieldGoalResult'] == 'Good') or (self.yards > 0)
         self.play_key = str(self.down) + '_'
         to_go_key = self.to_go
         if to_go_key >= 10:

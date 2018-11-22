@@ -33,8 +33,12 @@ struct FPlayReaction
 	UPROPERTY(BlueprintReadOnly)
 	int32 emotion_label;
 
+	UPROPERTY(BlueprintReadOnly)
+	FString play_desc;
+
 	FPlayReaction()
-		: emotion_label(0)
+		: emotion_label(0),
+		play_desc(TEXT(""))
 	{
 
 	}

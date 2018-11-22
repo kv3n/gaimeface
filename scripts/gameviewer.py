@@ -80,10 +80,11 @@ game_data = None
 def consume_play():
     play_id = int(request.args.get('playid'))
 
-    play = game_data.play_data[play_id]
+    play: PlayData = game_data.play_data[play_id]
     emotion_label = character.get_emotion_for(play)
+    print('Requested Emotion: ' + str(emotion_label))
 
-    play_reaction = {'emotion_label': emotion_label}
+    play_reaction = {'emotion_label': emotion_label, 'play_desc': play.play_description}
     return str(play_reaction)
 
 
@@ -94,7 +95,7 @@ def init_game():
     character_name = request.args.get('name')
     discrete_model = SchererModel(4)  # Once we have different emotion models substitute a model here
     character = Character(character_name, discrete_model)
-    game_data = GameData(2018100710, Team.SF, Team.ARI, Team.SF)  # Arizona vs 49ers
+    game_data = GameData(2017122409, Team.SF, Team.JAX, Team.SF)  # Arizona vs 49ers
 
     result = {"num_plays": len(game_data.play_data)}
 
@@ -102,7 +103,8 @@ def init_game():
 
 
 def main():
-    #app.run(debug=True, port=5000)  # run app in debug mode on port 5000
+    app.run(debug=True, port=5000)  # run app in debug mode on port 5000
+    """
     game_data = GameData(2017122409, Team.SF, Team.JAX, Team.SF)  # Jaguars @ 49ers
     discrete_model = SchererModel(4)  # Once we have different emotion models substitute a model here
     character = Character('kishore', discrete_model)
@@ -110,6 +112,7 @@ def main():
         print(play.play_description)
         emotion_label = character.get_emotion_for(play)
         print(emotion_label)
+    """
 
 
 if __name__ == "__main__":
