@@ -20,14 +20,14 @@ class Character:
         if self.sketch['football'] > 0:
             game_fair = self.sketch['game_fair']
             if game_fair < 0.25:
-                self.alpha = game_fair
-                self.beta = game_fair
+                self.alpha = 0.0
+                self.beta = 0.0
             elif self.sketch['game_fair'] > 0.75:
-                self.alpha = game_fair
-                self.beta = 1.0 - game_fair
+                self.alpha = 1.0
+                self.beta = 0.0
             else:
-                self.alpha = 0.5
-                self.beta = 0.5
+                self.alpha = 1.0
+                self.beta = 1.0
 
     def __get_utility_for(self, play: PlayData):
         team_score = play.offense_team_score  # This only works because we are considering only offense
@@ -36,9 +36,16 @@ class Character:
         if team_score == 0 and opponent_score == 0:
             utility = 1.0
         else:
+            adjusted_alpha = self.alpha
+            adjusted_beta = self.beta
+
+            if opponent_score == 0 and self.alpha == 0.5 and self.beta == 0.5:
+                adjusted_alpha = 0.75
+                adjusted_beta = 0.75
+
             utility = (team_score -
-                       self.alpha * (max(opponent_score - team_score, 0)) -
-                       self.beta * (max(team_score - opponent_score, 0))
+                       adjusted_alpha * (max(opponent_score - team_score, 0)) -
+                       adjusted_beta * (max(team_score - opponent_score, 0))
                        ) / max(team_score, opponent_score)
 
         self.debug_info += (str(team_score) + ' - ' + str(opponent_score) + ' -> ' + str(utility))
