@@ -148,17 +148,17 @@ class SchererModel(EmotionModel):
 
 
         if (joy > fear and joy > anger and joy > sadness):
-            return self.HAPPY
+            return {'emotion':self.HAPPY, 'intensity':joy}
         elif (fear > joy and fear > anger and fear > sadness):
-            return self.FEAR
+            return {'emotion':self.FEAR, 'intensity':fear}
         elif (anger > fear and anger > joy and anger > sadness):
-            return self.ANGER
+            return {'emotion':self.ANGER, 'intensity':anger}
         elif (sadness > fear and sadness > anger and sadness > joy):
-            return self.SAD
+            return {'emotion':self.SAD, 'intensity':sadness}
         elif (sadness == anger and sadness > fear and sadness > joy and sadness < 0.7):
-            return self.SAD
+            return {'emotion':self.SAD, 'intensity':sadness}
         elif (sadness == anger and sadness > fear and sadness > joy and sadness >= 0.7):
-            return self.ANGER
+            return {'emotion':self.ANGER, 'intensity':anger}
         else:
             return self.NEUTRAL        
 

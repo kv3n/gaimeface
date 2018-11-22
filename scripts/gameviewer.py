@@ -82,9 +82,9 @@ def consume_play():
 
     play: PlayData = game_data.play_data[play_id]
     emotion_label = character.get_emotion_for(play)
-    print('Requested Emotion: ' + str(emotion_label))
+    print('Requested Emotion: ' + str(emotion_label.emotion) + ' with intensity: ' str(emotion_label.intensity))
 
-    play_reaction = {'emotion_label': emotion_label, 'play_desc': play.play_description}
+    play_reaction = {'emotion_label': emotion_label.emotion, 'intensity':emotion_label.intensity, 'play_desc': play.play_description}
     return str(play_reaction)
 
 
