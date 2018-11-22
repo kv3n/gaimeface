@@ -40,17 +40,11 @@ class GameData:
         game_data_frame = pd.read_csv(play_by_play_data)
 
         # Fix bad play data
-        game_data_frame['PlayType'].fillna('QUARTER', inplace=True)
-        game_data_frame.loc[game_data_frame['Description'].str.contains('TWO-MINUTE'), 'PlayType'] = 'TWOMINUTE'
-        game_data_frame['OffenseTeam'].fillna('NONE', inplace=True)
+        game_data_frame['down'].fillna(0, inplace=True)
+        game_data_frame['PosTeamScore'].fillna(0, inplace=True)
+        game_data_frame['DefTeamScore'].fillna(0, inplace=True)
 
-        is_nogood = game_data_frame['Description'].str.contains('NO GOOD')
-        is_fieldgoal = game_data_frame['PlayType'].str.contains('FIELD GOAL')
-        is_extrapoint = game_data_frame['PlayType'].str.contains('EXTRA POINT')
-
-        game_data_frame.loc[is_nogood & (is_fieldgoal | is_extrapoint), 'IsIncomplete'] = 1
-
-        self.game_data = game_data_frame.loc[(game_data_frame['GameId'] == gameid)]
+        self.game_data = game_data_frame.loc[(game_data_frame['GameID'] == gameid)]
         self.home_team = home_team
         self.away_team = away_team
 
@@ -58,8 +52,8 @@ class GameData:
         successful_play_prob, total_plays = self.__make_game_dictionary__()
 
         # Sort game data for chronological ordering
-        self.game_data = self.game_data.sort_values(by=['Quarter', 'Minute', 'Second', 'PlayType'],
-                                                    ascending=[True, False, False, True])
+        self.game_data = self.game_data.sort_values(by=['qtr', 'TimeUnder', 'TimeSecs'],
+                                                    ascending=[True, False, False])
 
         self.play_data = []
         for _, game_play_row in self.game_data.iterrows():
@@ -109,7 +103,13 @@ def init_game():
 
 def main():
     #app.run(debug=True, port=5000)  # run app in debug mode on port 5000
-    game_data = GameData(2018100710, Team.SF, Team.ARI, Team.SF)  # Arizona vs 49ers
+    game_data = GameData(2017122409, Team.SF, Team.JAX, Team.SF)  # Jaguars @ 49ers
+    discrete_model = SchererModel(4)  # Once we have different emotion models substitute a model here
+    character = Character('kishore', discrete_model)
+    for play in game_data.play_data:
+        print(play.play_description)
+        emotion_label = character.get_emotion_for(play)
+        print(emotion_label)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ class Team(Enum):
     CLE = 'CLE'
     ARI = 'ARI'
     LAC = 'LAC'
+    SD = 'SD'   # This is because LAC was called SD before
     KC = 'KC'
     IND = 'IND'
     DAL = 'DAL'
@@ -17,6 +18,7 @@ class Team(Enum):
     PHI = 'PHI'
     ATL = 'ATL'
     NYG = 'NYG'
+    JAC = 'JAC'  # Alternate JAC team
     JAX = 'JAX'
     NYJ = 'NYJ'
     DET = 'DET'
@@ -24,6 +26,8 @@ class Team(Enum):
     CAR = 'CAR'
     NE = 'NE'
     OAK = 'OAK'
+    LA = 'LA'
+    STL = 'STL'  # Diff rams names
     LAR = 'LAR'
     BAL = 'BAL'
     WAS = 'WAS'
@@ -34,7 +38,7 @@ class Team(Enum):
     HOU = 'HOU'
     TEN = 'TEN'
     MIN = 'MIN'
-    NONE = 'NONE'
+    NONE = 'NA'
 
 class Emotions(Enum):
     NEUTRAL = 0
@@ -44,22 +48,19 @@ class Emotions(Enum):
     ANGER = 4
 
 class PlayType(Enum):
-    RUSH = 'RUSH'
-    PUNT = 'PUNT'
-    PASS = 'PASS'
-    FIELDGOAL = 'FIELD GOAL'
-    EXTRAPOINT = 'EXTRA POINT'
-    SACK = 'SACK'
-    SCRAMBLE = 'SCRAMBLE'
-    NOPLAY = 'NO PLAY'
-    FUMBLE = 'FUMBLES'
-    QBKNEEL = 'QB KNEEL'
-    TWOPOINT = 'TWO-POINT CONVERSION'
-    KICKOFF = 'KICK OFF'
-    CLOCKSTOP = 'CLOCK STOP'
-    QUARTER = 'QUARTER'
-    PENALTY ='PENALTY'
-    EXCEPTION = 'EXCEPTION'
-    TWOMINUTE = 'TWOMINUTE'
-    TIMEOUT = 'TIMEOUT'
+    RUSH = 'Run'
+    PUNT = 'Punt'
+    PASS = 'Pass'
+    FIELDGOAL = 'Field Goal'
+    EXTRAPOINT = 'Extra Point'
+    SACK = 'Sack'
+    NOPLAY = 'No Play'
+    QBKNEEL = 'QB Kneel'
+    TWOMINUTE = 'Two Minute Warning'
+    KICKOFF = 'Kickoff'
+    SPIKE = 'Spike'
+    QUARTER = 'Quarter End'
+    HALF = 'Half End'
+    END = 'End of Game'
+    TIMEOUT = 'Timeout'
     NONE = 'NONE'

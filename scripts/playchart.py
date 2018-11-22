@@ -4,26 +4,30 @@ from behavior import *
 
 class PlayData:
     def __init__(self, csv_row):
-        self.quarter = csv_row['Quarter']
+        self.quarter = csv_row['qtr']
 
-        self.time_left = timedelta(minutes=csv_row['Minute'], seconds=csv_row['Second'])
+        self.time_left = timedelta(minutes=int(csv_row['time'].split(':')[0]), seconds=int(csv_row['time'].split(':')[1]))
         self.play_type = PlayType(csv_row['PlayType'])
-        self.play_description = csv_row['Description']
+        self.play_description = csv_row['desc']
         self.statistical_behavior = None
         self.actual_behavior = 0
-        self.down = csv_row['Down']
-        self.to_go = csv_row['ToGo']
-        self.yards = csv_row['Yards']
-        self.is_incomplete = csv_row['IsIncomplete']
+        self.down = int(csv_row['down'])
+        self.to_go = int(csv_row['ydstogo'])
+        self.yards = int(csv_row['ydsnet'])
+        self.is_complete = (csv_row['PassOutcome'] == 'Complete') or (csv_row['PuntResult'] == 'Clean') or (csv_row['ExPointResult'] == 'Made') or (csv_row['FieldGoalResult'] == 'Good')
         self.play_key = str(self.down) + '_'
         to_go_key = self.to_go
         if to_go_key >= 10:
             to_go_key = 10
         self.play_key += str(to_go_key)
+        self.offense_team_score = int(csv_row['PosTeamScore'])
+        self.defense_team_score = int(csv_row['DefTeamScore'])
+
+        self.win_probability = csv_row['Win_Prob']  # This only works because we consider offense
 
         if self.is_active_play():
-            self.offense_team = Team(csv_row['OffenseTeam'])
-            self.defense_team = Team(csv_row['DefenseTeam'])
+            self.offense_team = Team(csv_row['posteam'])
+            self.defense_team = Team(csv_row['DefensiveTeam'])
         else:
             self.offense_team = Team.NONE
             self.defense_team = Team.NONE
@@ -31,7 +35,9 @@ class PlayData:
     def is_active_play(self):
         return (self.play_type != PlayType.TIMEOUT and
                 self.play_type != PlayType.QUARTER and
-                self.play_type != PlayType.TWOMINUTE)
+                self.play_type != PlayType.TWOMINUTE and
+                self.play_type != PlayType.HALF and
+                self.play_type != PlayType.END)
 
     def calculate_statistical_behavior(self, successful_play_prob, total_plays):
         self.statistical_behavior = Behavior()
