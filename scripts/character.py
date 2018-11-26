@@ -39,7 +39,7 @@ class Character:
             adjusted_alpha = self.alpha
             adjusted_beta = self.beta
 
-            if opponent_score == 0 and self.alpha == 0.5 and self.beta == 0.5:
+            if opponent_score == 0 and self.alpha == 1.0 and self.beta == 1.0:
                 adjusted_alpha = 0.75
                 adjusted_beta = 0.75
 
