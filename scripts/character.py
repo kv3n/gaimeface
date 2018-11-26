@@ -60,7 +60,7 @@ class Character:
         coping = self.sketch['coping']
 
         historical_probability = present * play.win_probability + past * self.game.game_odds
-        positive_negative_dev_effect = positive_dev * 0.2 - negative_dev - coping
+        positive_negative_dev_effect = positive_dev * 0.2 - negative_dev + coping
 
         probability = historical_probability + positive_negative_dev_effect
 
