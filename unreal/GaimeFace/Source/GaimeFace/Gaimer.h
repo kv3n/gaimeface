@@ -41,6 +41,7 @@ struct FPlayReaction
 
 	FPlayReaction()
 		: emotion_label(0),
+		intensity(0.0f),
 		play_desc(TEXT(""))
 	{
 
@@ -104,4 +105,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FPlayReaction GetCurrentReaction() { return mCurrentReaction; }
+
+	UFUNCTION(BlueprintCallable)
+	void ResetReaction() { mCurrentReaction = FPlayReaction(); }
 };

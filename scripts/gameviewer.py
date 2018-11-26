@@ -105,8 +105,9 @@ def init_game():
 
 
 def main():
-    #app.run(debug=True, port=5000)  # run app in debug mode on port 5000
+    app.run(debug=True, port=5000)  # run app in debug mode on port 5000
 
+    """
     game_data = GameData(2017122409, Team.SF, Team.JAX, Team.SF)  # Jaguars @ 49ers
     discrete_model = SchererModel(4)  # Once we have different emotion models substitute a model here
     character = Character('kishore', discrete_model)
@@ -115,6 +116,7 @@ def main():
         print(play.play_description)
         emotion_label = character.get_emotion_for(play)
         print(emotion_label)
+    """
 
 
 if __name__ == "__main__":
