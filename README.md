@@ -1,8 +1,11 @@
 # gaimeface
 
 -Kishore Venkateshan
+
 -Kristin Jordan
+
 -Mobeen Tariq
+
 -Seunghee Yoon 
 
 -GaimeFace uses a character story to develop an AI football fan that generates emotional reactions. The reactions of the character are generated on a play-by-play basis using animations to visualize the generated emotions through facial expressions. This model aims to mimic human emotions that a person would have watching a football game if he or she were to have similar background story as our developed character. 
