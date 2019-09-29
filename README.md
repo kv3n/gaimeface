@@ -17,10 +17,17 @@
 -The character sketch is a combination of parameters, we call descriptors, that describe a sports fan. The project’s initial input is a story written by the fan about themself. Using CoreNLP and Watson’s natural language understanding we derive values for each variable which will ultimately drive the emotions and intensities. The values for each descriptor are on a 0-1 scale and will be used in the other section functions. The descriptors are based on questions we believe will best describe the fans relationship with football and the teams playing. They are used throughout our project as subjective factors to make the character personalized to each fan’s story. The descriptors answer the following questions: 
 
 -Football_experience: How much experience do you have with football?
+
 -Positive_development: Has any significant development happened to your team that you feel positively about? 
+
 -Negative_development: Has any significant development happened to your team that you feel negatively about?
+
 -Reaction_intensity: How intense are your reactions to football related events? 
-Present_or_past: Are your feelings regarding a game based on the present game or the teams history? (0 for present - 1 for history)
+
+-Present_or_past: Are your feelings regarding a game based on the present game or the teams history? (0 for present - 1 for history)
+
 -Coping_for_team: Are there any events regarding the team that may help you cope?
+
 -Coping_ability: How good are you at coping?
+
 -Game_type: What type of game would you like to see (blowout-1, fair game-0.5, doesn’t matter-0)?
